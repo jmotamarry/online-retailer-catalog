@@ -22,7 +22,6 @@ public class RedBlackBinaryTree {
         } else if (product.hashCode() > root.product.hashCode()) {
             root.right = insertRecursive(root.right, product);
         } else {
-            // Handle duplicate hash codes, you can define your own strategy
         }
 
         if (isRed(root.right) && !isRed(root.left))

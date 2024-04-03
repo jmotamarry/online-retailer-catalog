@@ -55,12 +55,16 @@ public class HashTable {
         size++;
     }
 
-    public User get(User user) {
-        int hash = hash(user);
-        int index = hash;
+    public User get(int hash) {
+        int index = hash % capacity;
+        int startIndex = index;
 
-        while (table[index] != null && !table[index].equals(user)) {
+        while (table[index] != null && !(hash(table[index]) == hash)) {
             index = (index + QUADRATIC_CONSTANT) % capacity;
+            // If we have traversed the entire array and haven't found the element, stop searching
+            if (index == startIndex) {
+                return null;
+            }
         }
 
         return table[index];

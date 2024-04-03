@@ -14,11 +14,11 @@ public class LinkedList {
         size++;
     }
 
-    public void delete(int id) {
+    public void delete(String name) {
         if (head == null)
             return;
 
-        if (head.product.getId() == id) {
+        if (head.product.getName().equals(name)) {
             head = head.next;
             size--;
             return;
@@ -26,7 +26,7 @@ public class LinkedList {
 
         Node current = head;
         while (current.next != null) {
-            if (current.next.product.getId() == id) {
+            if (current.next.product.getName().equals(name)) {
                 current.next = current.next.next;
                 size--;
                 return;

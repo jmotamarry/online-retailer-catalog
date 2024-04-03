@@ -4,8 +4,9 @@ import java.util.Date;
 public class RetailerDriver {
     public static void main(String[] args) {
         RedBlackBinaryTree catalog = new RedBlackBinaryTree();
-        for (int i = 0; i < 20; i++) {
-            catalog.insert(new Product("Product" + i, "Description of Product" + i, 10.0 + i, i, new Date()));
+        int id;
+        for (id = 0; id < 20; id++) {
+            catalog.insert(new Product("Product" + id, "Description of Product" + id, 10.0 + id, id, new Date()));
         }
 
         HashTable users = new HashTable();
@@ -28,6 +29,8 @@ public class RetailerDriver {
             System.out.println("6. Change password");
             System.out.println("7. Add to cart");
             System.out.println("8. Remove from cart");
+            System.out.println("9. Log out");
+            System.out.println("10. Add to catalog");
             System.out.println("-1. Exit");
 
             System.out.print("\nEnter your choice: ");
@@ -40,7 +43,7 @@ public class RetailerDriver {
                     String username = scanner.nextLine();
                     System.out.print("Enter password: ");
                     String password = scanner.nextLine();
-                    User user = (User) users.get(new User(username, password));
+                    User user = (User) users.get(username.hashCode());
                     if (user != null && user.getPassword().equals(password)) {
                         loggedIn = user;
                         System.out.println("Logged in as " + loggedIn.getUsername());
@@ -93,15 +96,14 @@ public class RetailerDriver {
                     break;
                 case 7:
                     if (loggedIn != null) {
-                        System.out.print("Enter product ID to add to cart: ");
-                        int productId = scanner.nextInt();
-                        scanner.nextLine(); // Consume newline
-                        Product productToAdd = catalog.search(productId);
+                        System.out.print("Enter product name to add to cart: ");
+                        String productName = scanner.nextLine();
+                        Product productToAdd = catalog.search(productName.hashCode());
                         if (productToAdd != null) {
                             loggedIn.getCart().insert(productToAdd);
                             System.out.println("Product added to cart: " + productToAdd);
                         } else {
-                            System.out.println("No product found with ID: " + productId);
+                            System.out.println("No product found with name: " + productName);
                         }
                     } else {
                         System.out.println("Please log in to add items to your cart");
@@ -109,19 +111,33 @@ public class RetailerDriver {
                     break;
                 case 8:
                     if (loggedIn != null) {
-                        System.out.print("Enter product ID to remove from cart: ");
-                        int productId = scanner.nextInt();
-                        scanner.nextLine(); // Consume newline
-                        Product productToRemove = catalog.search(productId);
+                        System.out.print("Enter product name to remove from cart: ");
+                        String productName = scanner.nextLine();
+                        Product productToRemove = catalog.search(productName.hashCode());
                         if (productToRemove != null) {
-                            loggedIn.getCart().delete(productId);
+                            loggedIn.getCart().delete(productName);
                             System.out.println("Product removed from cart: " + productToRemove);
                         } else {
-                            System.out.println("No product found with ID: " + productId);
+                            System.out.println("No product found with ID: " + productName);
                         }
                     } else {
                         System.out.println("Please log in to remove items from your cart");
                     }
+                    break;
+                case 9:
+                    loggedIn = null;
+                    System.out.println("Logged out successfully.");
+                    break;
+                case 10:
+                    System.out.println("Input the new product's name: ");
+                    String name = scanner.nextLine();
+                    System.out.println("Input the new product's description: ");
+                    String description = scanner.nextLine();
+                    System.out.println("Input the new product's price: ");
+                    double price = scanner.nextDouble();
+                    id += 1;
+                    catalog.insert(new Product(name, description, price, id, new Date()));
+                    System.out.println("Added to catalog.");
                     break;
                 case -1:
                     System.out.println("Exiting...");
