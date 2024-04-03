@@ -141,6 +141,7 @@ public class RetailerDriver {
                     break;
                 case -1:
                     System.out.println("Exiting...");
+                    scanner.close();
                     System.exit(0);
                 default:
                     System.out.println("Invalid choice, please try again");
