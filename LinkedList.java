@@ -2,19 +2,19 @@ public class LinkedList {
     private Node head;
     private int size;
 
-    public LinkedList() {
+    public LinkedList() {       // initializes linked list
         this.head = null;
         this.size = 0;
     }
 
-    public void insert(Product product) {
+    public void insert(Product product) {       // inserts product at the front of the linked list
         Node newNode = new Node(product);
         newNode.next = head;
         head = newNode;
         size++;
     }
 
-    public void delete(String name) {
+    public void delete(String name) {       // deletes the product with the name parameter name
         if (head == null)
             return;
 
@@ -35,7 +35,7 @@ public class LinkedList {
         }
     }
 
-    public void printList() {
+    public void printList() {       // prints out the whole linked list
         Node current = head;
         while (current != null) {
             System.out.println(current.product);
@@ -43,15 +43,15 @@ public class LinkedList {
         }
     }
 
-    public int getSize() {
+    public int getSize() {      // returns the size of the linked list
         return size;
     }
 
-    private static class Node {
+    private static class Node {     // creates linked list nodes with a product and a next node
         private Product product;
         private Node next;
 
-        public Node(Product product) {
+        public Node(Product product) {      // initializes nodes with a product and a null next node
             this.product = product;
             this.next = null;
         }
