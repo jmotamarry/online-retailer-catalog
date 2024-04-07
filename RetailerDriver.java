@@ -43,7 +43,7 @@ public class RetailerDriver {
                     String username = scanner.nextLine();
                     System.out.print("Enter password: ");
                     String password = scanner.nextLine();
-                    User user = (User) users.get(username.hashCode());
+                    User user = (User) users.get(username);
                     if (user != null && user.getPassword().equals(password)) {
                         loggedIn = user;
                         System.out.println("Logged in as " + loggedIn.getUsername());

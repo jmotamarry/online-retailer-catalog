@@ -3,7 +3,7 @@ import java.util.Arrays;
 public class HashTable {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double LOAD_FACTOR_THRESHOLD = 0.7;
-    private static final int QUADRATIC_CONSTANT = 5; // arbitrary constant for quadratic probing
+    private static final int LINEAR_CONSTANT = 1; // constant for linear probing
     
     private int size;
     private int capacity;
@@ -15,15 +15,30 @@ public class HashTable {
     }
 
     private int hash(User user) {
-        return Math.abs(user.hashCode() % capacity);
+        return Math.abs(user.getUsername().hashCode() % capacity);
     }
 
     private int findEmptySlot(int hash) {
-        int i = 0;
-        while (table[(hash + i * i) % capacity] != null) {
-            i++;
+        int index = hash % capacity;
+        while (table[index] != null) {
+            index = (index + LINEAR_CONSTANT) % capacity;
         }
-        return (hash + i * i) % capacity;
+        return index;
+    }
+
+    public User get(String username) {
+        int hash = Math.abs(username.hashCode() % capacity);
+        int index = hash;
+
+        while (table[index] != null && !table[index].getUsername().equals(username)) {
+            index = (index + LINEAR_CONSTANT) % capacity;
+            // If we have traversed the entire array and haven't found the element, stop searching
+            if (index == hash) {
+                return null;
+            }
+        }
+
+        return table[index];
     }
 
     private void resize() {
@@ -55,27 +70,13 @@ public class HashTable {
         size++;
     }
 
-    public User get(int hash) {
-        int index = hash % capacity;
-        int startIndex = index;
-
-        while (table[index] != null && !(hash(table[index]) == hash)) {
-            index = (index + QUADRATIC_CONSTANT) % capacity;
-            // If we have traversed the entire array and haven't found the element, stop searching
-            if (index == startIndex) {
-                return null;
-            }
-        }
-
-        return table[index];
-    }
-
     public void remove(User user) {
-        int hash = hash(user);
+        String username = user.getUsername();
+        int hash = Math.abs(username.hashCode() % capacity);
         int index = hash;
 
-        while (table[index] != null && !table[index].equals(user)) {
-            index = (index + QUADRATIC_CONSTANT) % capacity;
+        while (table[index] != null && !table[index].getUsername().equals(username)) {
+            index = (index + LINEAR_CONSTANT) % capacity;
         }
 
         if (table[index] != null) {
