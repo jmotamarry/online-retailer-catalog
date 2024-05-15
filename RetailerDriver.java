@@ -57,6 +57,7 @@ public class RetailerDriver {
             System.out.println("12. Print all the cities and their connections");
             System.out.println("13. Add a city to the graph");
             System.out.println("14. Add a new path between cities");
+            System.out.println("15. See how long it takes to ship from one city to another");
             System.out.println("-1. Exit");
 
             System.out.print("\nEnter your choice: ");
@@ -196,6 +197,23 @@ public class RetailerDriver {
                     System.out.println("Days to travel: ");
                     int daysToTravel = scanner.nextInt();
                     cityGraph.addEdge(new WeightedGraphNode(startCity), new WeightedGraphNode(endCity), daysToTravel);
+                    break;
+                case 15:
+                    System.out.println("Start city: ");
+                    String firstCity = scanner.nextLine();
+                    System.out.println("End city: ");
+                    String secondCity = scanner.nextLine();
+                    List<WeightedGraphNode> shortest = cityGraph.shortestPath(firstCity, secondCity);
+                    try {
+                        System.out.println("");
+                        for (int i = 0; i < shortest.size() - 2; i++) {
+                            System.out.print(shortest.get(i).getCityName() + " -> ");
+                        }
+                        System.out.println(shortest.get(shortest.size() - 2).getCityName());
+                        System.out.println("All packages will take " + Integer.valueOf(shortest.get(shortest.size() - 1).getCityName()) + " days to get there.");
+                    } catch (Exception e) {
+                        System.out.println("\nThat city is not in the graph or there is no path to that city from " + firstCity + ".");
+                    }
                     break;
                 case -1:        // exits the program on input -1
                     System.out.println("Exiting...");
