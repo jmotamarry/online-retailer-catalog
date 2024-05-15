@@ -1,8 +1,30 @@
 import java.util.Scanner;
 import java.util.Date;
+import java.util.*;
 
 public class RetailerDriver {
     public static void main(String[] args) {
+        final String WAREHOUSE = "Bakersfield";
+        WeightedGraph cityGraph = new WeightedGraph();      // creates a weighted graph as a city map and adds default values
+
+        cityGraph.addNode(new WeightedGraphNode("San Francisco"));
+        cityGraph.addNode(new WeightedGraphNode("San Jose"));
+        cityGraph.addNode(new WeightedGraphNode("Bakersfield"));
+        cityGraph.addNode(new WeightedGraphNode("Fresno"));
+        cityGraph.addNode(new WeightedGraphNode("Oakland"));
+        cityGraph.addNode(new WeightedGraphNode("Los Angeles"));
+        cityGraph.addNode(new WeightedGraphNode("San Diego"));
+        cityGraph.addNode(new WeightedGraphNode("Fremont"));
+        cityGraph.addNode(new WeightedGraphNode("Sacramento"));
+        cityGraph.addNode(new WeightedGraphNode("Redwood City"));
+
+        cityGraph.addEdge(new WeightedGraphNode("San Francisco"), new WeightedGraphNode("San Jose"), 3);
+        cityGraph.addEdge(new WeightedGraphNode("San Francisco"), new WeightedGraphNode("San Diego"), 6);
+        cityGraph.addEdge(new WeightedGraphNode("Redwood City"), new WeightedGraphNode("San Jose"), 1);
+        cityGraph.addEdge(new WeightedGraphNode("Bakersfield"), new WeightedGraphNode("Redwood City"), 5);
+        cityGraph.addEdge(new WeightedGraphNode("Bakersfield"), new WeightedGraphNode("San Jose"), 5);
+
+
         RedBlackBinaryTree catalog = new RedBlackBinaryTree();      // creates an RBT as catalog for products
         int id;
         for (id = 0; id < 20; id++) {       // creates 20 default products
@@ -31,6 +53,10 @@ public class RetailerDriver {
             System.out.println("8. Remove from cart");
             System.out.println("9. Log out");
             System.out.println("10. Add to catalog");
+            System.out.println("11. See delivery time based on city");
+            System.out.println("12. Print all the cities and their connections");
+            System.out.println("13. Add a city to the graph");
+            System.out.println("14. Add a new path between cities");
             System.out.println("-1. Exit");
 
             System.out.print("\nEnter your choice: ");
@@ -138,6 +164,38 @@ public class RetailerDriver {
                     id += 1;
                     catalog.insert(new Product(name, description, price, id, new Date()));
                     System.out.println("Added to catalog.");
+                    break;
+                case 11:
+                    System.out.println("Input the name of the city you are in: ");
+                    String city = scanner.nextLine().toLowerCase();
+                    List<WeightedGraphNode> path = cityGraph.shortestPath(WAREHOUSE, city);
+                    try {
+                        System.out.println("");
+                        for (int i = 0; i < path.size() - 2; i++) {
+                            System.out.print(path.get(i).getCityName() + " -> ");
+                        }
+                        System.out.println(path.get(path.size() - 2).getCityName());
+                        System.out.println("All packages will take " + Integer.valueOf(path.get(path.size() - 1).getCityName()) + " days to get to you.");
+                    } catch (Exception e) {
+                        System.out.println("\nThat city is not in the graph or there is no path to that city from " + WAREHOUSE + ".");
+                    }
+                    break;
+                case 12:
+                    cityGraph.printGraph();
+                    break;
+                case 13:
+                    System.out.println("What do you want the new city to be called: ");
+                    String newCity = scanner.nextLine();
+                    cityGraph.addNode(new WeightedGraphNode(newCity));
+                    break;
+                case 14:
+                    System.out.println("Start city: ");
+                    String startCity = scanner.nextLine();
+                    System.out.println("End city: ");
+                    String endCity = scanner.nextLine();
+                    System.out.println("Days to travel: ");
+                    int daysToTravel = scanner.nextInt();
+                    cityGraph.addEdge(new WeightedGraphNode(startCity), new WeightedGraphNode(endCity), daysToTravel);
                     break;
                 case -1:        // exits the program on input -1
                     System.out.println("Exiting...");
